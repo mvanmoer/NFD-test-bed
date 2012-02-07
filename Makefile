@@ -4,7 +4,7 @@ PRG = pgm5
 FC = gfortran
 
 #FCFLAGS = -free -openmp -O2 -o $@
-FCFLAGS = -ffree_form -fopenmp -O2 -o $@
+FCFLAGS = -ffree-form -fopenmp -O2 -o $@
 
 OBJECTS = advection.o initial_conditions.o integration.o \
 	 boundary_conditions.o putfield.o diffusion.o \

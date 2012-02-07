@@ -30,7 +30,7 @@ program pgm5
   real :: Thetabar = 300.0
 
   ! strings
-  character(len=*), parameter :: fmt = '(I5,1X,F4.0,3X,F7.3,1X,F7.3,2X,F7.3,1X,F7.3,2X,F7.3,1X,F6.3,2X,F8.4,2X,F6.4,2X,F8.2,1X,F7.2)'
+  character(len=*), parameter :: fmt='(I5,1X,F4.0,3X,F7.3,1X,F7.3,2X,F7.3,1X,F7.3,2X,F7.3,1X,F6.3,2X,F8.4,2X,F6.4,2X,F8.2,1X,F7.2)'
 
   integer :: n, nstep, nplot
   integer :: i, j, k
