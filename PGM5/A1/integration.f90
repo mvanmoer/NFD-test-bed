@@ -38,7 +38,7 @@ contains
     vw_y = 0.0
     ww_z = 0.0
 
-    !call uadvect()
+    call uadvect()
     !call vadvect()
     !call wadvect()
     call strang()
