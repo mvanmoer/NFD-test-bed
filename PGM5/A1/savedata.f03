@@ -38,11 +38,15 @@ contains
 
     integer,parameter :: iounit=11
     character(len=256) :: outfile
-    
+    character(len=256) :: int2str
+
     ! awaiting gfortran 4.7.0 for this
     ! character(:), allocatable :: outfile
-
-    outfile = name//"."//char(step)//".raw"
+    
+    ! sigh...
+    write(int2str,*) step
+    outfile = name//"."//trim(adjustl(int2str))//".raw"
+ 
     print*,'Writing unformatted data file: '//outfile
     open(unit=iounit,access='stream',file=outfile,status='new')
     write(iounit) field   
