@@ -18,51 +18,30 @@
 ! file is created from Fortran, and 1 from C.
 !
 !
-    subroutine putfield(name,datatime,field,nx,ny,nz)
+! mvm 20130117 -- changing from B. Jewett's
+!  -- moving to Fortran 2003 in order to use streaming access
+!  -- writing each timestep as a separate file, instead of one file containing
+!     all variables and all timesteps.
+!  -- changing to module
+module savedata
     implicit none
+    public
+contains
+    subroutine putfield(name,datatime,field,nx,ny,nz)
 
-    integer                   :: nx,ny,nz
-    character*(*)                name
-    real                      :: datatime
-    real,dimension (nx,ny,nz) :: field
+    integer, intent(in)                     :: nx, ny, nz
+    character(len=*), intent(in)            :: name
+    real, intent(in)                        :: datatime
+    real,dimension (nx,ny,nz), intent(in)   :: field
 
-    integer,parameter :: iounit=11,sourcetype=0
-    integer,save      :: count=0
-    integer           :: ilen
-    character         :: tname*4
-!
-! ... If name = '*' close file and return
-!
-    if (name.eq.'*') then
-      print*,'Output history file closed.'
-      close(iounit)
-      count = -1
-      return
-    endif
-    if (count.lt.0) then
-      print*,'putfield: error: file has already been closed.'
-      stop
-    endif
-!
-! ... First call: open file, write file data type as Fortran.
-!
-    if (count.eq.0) then
-      print*,'Writing unformatted data file RunHistory.dat'
-      open(iounit,access='stream',file='RunHistory.raw',status='unknown',form='unformatted')
-      rewind(iounit)
-      !write(iounit) sourcetype
-    endif
-    count = count+1
+    integer,parameter :: iounit=11
+    character(len=*)  :: outfile
 
-!    write(tname,'(a)') name(1:min(4,len(name)))
-!    write(6,10) count,tname,nx,ny,nz,datatime
-!10	format(' Writing field ',i4,': ',a,'(',i3,',',i3,',',i3,') for T=',f6.1)
+    outfile = name//"."//char(datatime)//".raw"
+    print*,'Writing unformatted data file: '//outfile
+    open(unit=iounit,access='stream',file=outfile,status='new')
+    write(iounit) field   
+    close(iounit) 
 
-! ... Write header
-!    write(iounit) count,tname,datatime,nx,ny,nz
-
-! ... Write array
-    write(iounit) field
-
-    return
-    end
+    end subroutine putfield
+end module savedata
