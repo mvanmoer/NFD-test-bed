@@ -4,11 +4,11 @@ PRG = pgm5
 FC = gfortran
 
 #FCFLAGS = -free -openmp -O2 -o $@
-FCFLAGS = -ffree-form -fopenmp -O2 -o $@
+FCFLAGS = -ffree-form -Wall -O2 -o $@
 
-OBJECTS = initial_conditions.o \
-	 boundary_conditions.o putfield.o \
-	 pgf_bouyancy.o pgm5.o 
+OBJECTS = initial_conditions.o pgf_bouyancy.o \
+	 boundary_conditions.o savedata.o \
+	 pgm5.o 
 
 # NOTE: might need dependencies to be .o instead of .mod depending
 # on system/compiler.
@@ -20,13 +20,14 @@ all: $(PRG)
 	$(FC) -c $(FCFLAGS) $<
 
 # .Fs
-putfield.o: putfield.F
-	$(FC) -c $(FCFLAGS) putfield.F
+savedata.o: savedata.f03
+	$(FC) -std=f2003 -c $(FCFLAGS) $<
 
+# .os that depend on modules
+pgf_bouyancy.o: pgf_bouyancy.f90
+	$(FC) -c $(FCFLAGS) $<
 
-pgm5.o: pgm5.f90 \
-	initial_conditions.mod boundary_conditions.mod \
-	pgf_bouyancy.mod
+pgm5.o: pgm5.f90 initial_conditions.mod boundary_conditions.mod pgf_bouyancy.mod
 	$(FC) -c $(FCFLAGS) $<
 
 pgm5: $(OBJECTS)

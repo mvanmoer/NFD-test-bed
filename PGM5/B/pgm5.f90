@@ -10,6 +10,7 @@ program pgm5
   use initial_conditions
   use boundary_conditions
   use pgf_bouyancy
+  use savedata
   implicit none
 
   integer, parameter :: nx = 33, ny = 33, nz = 16
@@ -55,7 +56,7 @@ program pgm5
 
   ! plot initial condition
   tprime = t1 - Thetabar
-  call plotunstaggered(0.0)
+  call plotunstaggered(0)
 
 
   print*, "Step  Time   umin    umax    vmin     vmax     wmin    wmax   tmin      tmax        pmin     pmax"
@@ -112,7 +113,7 @@ program pgm5
      tprime = t1 - Thetabar   
 
      if (mod(n,nplot) == 0) then
-        call plotunstaggered(real(n))
+        call plotunstaggered(n)
      end if
 
      !print intermediate values every 0..9, then by tens
@@ -132,7 +133,7 @@ contains
   ! Tried OMP triple-loops here, but this was causing the crashes
   ! Going with regular loops.
   subroutine plotunstaggered(step)
-    real, intent(in) :: step
+    integer, intent(in) :: step
     real, dimension(1:nx,1:ny,1:nz) :: plotU,plotV,plotW
 
     if (step < 1.0) then
@@ -187,11 +188,11 @@ contains
        end do
     end if
 
-    call putfield("U", step, plotU, nx, ny, nz)
-    call putfield("V", step, plotV, nx, ny, nz)
-    call putfield("W", step, plotW, nx, ny, nz)
-    call putfield("T", step, tprime(1:nx,1:ny,1:nz), nx, ny, nz) 
-    call putfield("P", step, p3(1:nx,1:ny,1:nz), nx, ny, nz)
+    call savefield("U", step, plotU, nx, ny, nz)
+    call savefield("V", step, plotV, nx, ny, nz)
+    call savefield("W", step, plotW, nx, ny, nz)
+    call savefield("T", step, tprime(1:nx,1:ny,1:nz), nx, ny, nz) 
+    call savefield("P", step, p3(1:nx,1:ny,1:nz), nx, ny, nz)
 
   end subroutine plotunstaggered
 end program pgm5
