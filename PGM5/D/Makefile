@@ -8,7 +8,7 @@ FC = gfortran
 FCFLAGS = -ffree-form -O2 -o $@
 
 OBJECTS = advection.o initial_conditions.o integration.o \
-	 boundary_conditions.o putfield.o diffusion.o \
+	 boundary_conditions.o savedata.o diffusion.o \
 	 pgf_bouyancy.o pgm5.o 
 
 # NOTE: might need dependencies to be .o instead of .mod depending
@@ -20,9 +20,8 @@ all: $(PRG)
 %.o: %.f90
 	$(FC) -c $(FCFLAGS) $<
 
-# .Fs
-putfield.o: putfield.F
-	$(FC) -c $(FCFLAGS) putfield.F
+savedata.o: savedata.f03
+	$(FC) -std=f2003 -c $(FCFLAGS) $< 
 
 # .os that depend on modules
 integration.o: integration.f90 advection.mod
@@ -30,7 +29,7 @@ integration.o: integration.f90 advection.mod
 
 pgm5.o: pgm5.f90 integration.mod diffusion.mod \
 	initial_conditions.mod boundary_conditions.mod \
-	pgf_bouyancy.mod
+	pgf_bouyancy.mod savedata.mod
 	$(FC) -c $(FCFLAGS) $<
 
 pgm5: $(OBJECTS)
