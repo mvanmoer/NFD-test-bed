@@ -16,23 +16,11 @@ program pgm5
   use read_parameters_module 
   implicit none
 
-  !integer, parameter :: nx = 33, ny = 33, nz = 16
   integer :: nx, ny, nz
   real :: dx, dy, dz
   real :: dt
 
   real :: CTdt ! dt for centered time
-
-  ! Ah, these now have to become heap, not stack.
-  ! momentum for n-1,n,n+1
-  !real, dimension(0:nx+1,0:ny+1,0:nz+1) :: u1, u2, u3, v1, v2, v3, w1, w2, w3
-  ! scalar
-  !real, dimension(-1:nx+2,-1:ny+2,-1:nz+2) :: t1, t2, tprime, t1a
-  ! pressure
-  !real, dimension(0:nx+1,0:ny+1,nz) :: p1, p2, p3
-  ! density
-  !real, dimension(1:nz) :: rho_t
-  !real, dimension(1:nz+1) :: rho_w
  
   real, dimension(:,:,:), allocatable :: u1, u2, u3, v1, v2, v3, w1, w2, w3
   real, dimension(:,:,:), allocatable :: t1, t2, tprime, t1a
