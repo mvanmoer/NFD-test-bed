@@ -19,7 +19,7 @@ program pgm5
   !integer, parameter :: nx = 33, ny = 33, nz = 16
   integer :: nx, ny, nz
   real :: dx, dy, dz
-  real :: dt = 1.0
+  real :: dt
 
   real :: CTdt ! dt for centered time
 
@@ -40,7 +40,7 @@ program pgm5
   real, dimension(:), allocatable :: rho_t
   real, dimension(:), allocatable :: rho_w
 
-   real :: Thetabar = 300.0
+  real :: Thetabar = 300.0
 
   ! strings
   character(len=*), parameter :: fmt='(I5,1X,F4.0,3X,F7.3,1X,F7.3,2X,F7.3,1X,F7.3,2X,F7.3,1X,F6.3,2X,F8.4,2X,F6.4,2X,F8.2,1X,F7.2)'
@@ -48,7 +48,7 @@ program pgm5
   integer :: n, nstep, nplot
   integer :: i, j, k
 
-  call read_parameters("inputfile", nx, ny, nz, dx, dy, dz) 
+  call read_parameters("inputfile", nx, ny, nz, dx, dy, dz, dt, nstep, nplot) 
 
   allocate(u1(0:nx+1,0:ny+1,0:nz+1), &
            u2(0:nx+1,0:ny+1,0:nz+1), &
@@ -70,10 +70,6 @@ program pgm5
            p3(0:nx+1,0:ny+1,nz))
 
   allocate(rho_t(1:nz), rho_w(1:nz+1))
-
-   
-  nstep = 450
-  nplot = 50
 
   ! set initial conditions
   call ic(t1(1:nx,1:ny,1:nz), u1(1:nx+1,1:ny,1:nz), v1(1:nx,1:ny+1,1:nz), &
