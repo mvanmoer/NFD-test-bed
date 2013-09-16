@@ -12,31 +12,65 @@ program pgm5
   use integration
   use pgf_bouyancy
   use diffusion
+  use savedata
+  use read_parameters_module 
   implicit none
 
-  integer, parameter :: nx = 33, ny = 33, nz = 16
+  !integer, parameter :: nx = 33, ny = 33, nz = 16
+  integer :: nx, ny, nz
   real, parameter :: dx = 500.0, dy = 500.0, dz = 500.0
   real :: dt = 1.0
 
   real :: CTdt ! dt for centered time
 
+  ! Ah, these now have to become heap, not stack.
   ! momentum for n-1,n,n+1
-  real, dimension(0:nx+1,0:ny+1,0:nz+1) :: u1, u2, u3, v1, v2, v3, w1, w2, w3
+  !real, dimension(0:nx+1,0:ny+1,0:nz+1) :: u1, u2, u3, v1, v2, v3, w1, w2, w3
   ! scalar
-  real, dimension(-1:nx+2,-1:ny+2,-1:nz+2) :: t1, t2, tprime, t1a
+  !real, dimension(-1:nx+2,-1:ny+2,-1:nz+2) :: t1, t2, tprime, t1a
   ! pressure
-  real, dimension(0:nx+1,0:ny+1,nz) :: p1, p2, p3
+  !real, dimension(0:nx+1,0:ny+1,nz) :: p1, p2, p3
   ! density
-  real, dimension(1:nz) :: rho_t
-  real, dimension(1:nz+1) :: rho_w
-  real :: Thetabar = 300.0
+  !real, dimension(1:nz) :: rho_t
+  !real, dimension(1:nz+1) :: rho_w
+ 
+  real, dimension(:,:,:), allocatable :: u1, u2, u3, v1, v2, v3, w1, w2, w3
+  real, dimension(:,:,:), allocatable :: t1, t2, tprime, t1a
+  real, dimension(:,:,:), allocatable :: p1, p2, p3
+  real, dimension(:), allocatable :: rho_t
+  real, dimension(:), allocatable :: rho_w
+
+   real :: Thetabar = 300.0
 
   ! strings
   character(len=*), parameter :: fmt='(I5,1X,F4.0,3X,F7.3,1X,F7.3,2X,F7.3,1X,F7.3,2X,F7.3,1X,F6.3,2X,F8.4,2X,F6.4,2X,F8.2,1X,F7.2)'
 
   integer :: n, nstep, nplot
   integer :: i, j, k
-  
+
+  call read_parameters("inputfile", nx, ny, nz) 
+  allocate(u1(0:nx+1,0:ny+1,0:nz+1), &
+           u2(0:nx+1,0:ny+1,0:nz+1), &
+           u3(0:nx+1,0:ny+1,0:nz+1), &
+           v1(0:nx+1,0:ny+1,0:nz+1), &
+           v2(0:nx+1,0:ny+1,0:nz+1), &
+           v3(0:nx+1,0:ny+1,0:nz+1), &
+           w1(0:nx+1,0:ny+1,0:nz+1), &
+           w2(0:nx+1,0:ny+1,0:nz+1), &
+           w3(0:nx+1,0:ny+1,0:nz+1))
+
+  allocate(t1(-1:nx+2,-1:ny+2,-1:nz+2), &
+           t2(-1:nx+2,-1:ny+2,-1:nz+2), &
+           tprime(-1:nx+2,-1:ny+2,-1:nz+2), &
+           t1a(-1:nx+2,-1:ny+2,-1:nz+2))
+
+  allocate(p1(0:nx+1,0:ny+1,nz), &
+           p2(0:nx+1,0:ny+1,nz), &
+           p3(0:nx+1,0:ny+1,nz))
+
+  allocate(rho_t(1:nz), rho_w(1:nz+1))
+
+   
   nstep = 450
   nplot = 50
 
@@ -58,7 +92,7 @@ program pgm5
 
   ! plot initial condition
   tprime = t1 - Thetabar
-  call plotunstaggered(0.0)
+  call plotunstaggered(0)
 
 
   print*, "Step  Time   umin    umax    vmin     vmax     wmin    wmax   tmin      tmax        pmin     pmax"
@@ -126,7 +160,7 @@ program pgm5
      tprime = t1 - Thetabar   
 
      if (mod(n,nplot) == 0) then
-        call plotunstaggered(real(n))
+        call plotunstaggered(n)
      end if
 
      !print intermediate values every 0..9, then by tens
@@ -140,13 +174,14 @@ program pgm5
      end if
 
   end do ! time loop finished     
+  deallocate(u1, u2, u3, v1, v2, v3, w1, w2, w3, t1, t2, tprime, t1a, p1, p2, p3, rho_t, rho_w)
 
 contains
   ! unstaggers u,v,w and plots along with theta prime and p
   ! Tried OMP triple-loops here, but this was causing the crashes
   ! Going with regular loops.
   subroutine plotunstaggered(step)
-    real, intent(in) :: step
+    integer, intent(in) :: step
     real, dimension(1:nx,1:ny,1:nz) :: plotU,plotV,plotW
 
     if (step < 1.0) then
@@ -201,11 +236,12 @@ contains
        end do
     end if
 
-    call putfield("U", step, plotU, nx, ny, nz)
-    call putfield("V", step, plotV, nx, ny, nz)
-    call putfield("W", step, plotW, nx, ny, nz)
-    call putfield("T", step, tprime(1:nx,1:ny,1:nz), nx, ny, nz) 
-    call putfield("P", step, p3(1:nx,1:ny,1:nz), nx, ny, nz)
+!   call savefield("U", step, plotU, nx, ny, nz)
+!   call savefield("V", step, plotV, nx, ny, nz)
+!   call savefield("W", step, plotW, nx, ny, nz)
+    call savefield("test", step, plotU, plotV, plotW, nx, ny, nz)
+    call savefield("T", step, tprime(1:nx,1:ny,1:nz), nx, ny, nz) 
+    call savefield("P", step, p3(1:nx,1:ny,1:nz), nx, ny, nz)
 
   end subroutine plotunstaggered
 end program pgm5
