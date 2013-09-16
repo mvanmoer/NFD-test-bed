@@ -18,7 +18,7 @@ program pgm5
 
   !integer, parameter :: nx = 33, ny = 33, nz = 16
   integer :: nx, ny, nz
-  real, parameter :: dx = 500.0, dy = 500.0, dz = 500.0
+  real :: dx, dy, dz
   real :: dt = 1.0
 
   real :: CTdt ! dt for centered time
@@ -48,7 +48,8 @@ program pgm5
   integer :: n, nstep, nplot
   integer :: i, j, k
 
-  call read_parameters("inputfile", nx, ny, nz) 
+  call read_parameters("inputfile", nx, ny, nz, dx, dy, dz) 
+
   allocate(u1(0:nx+1,0:ny+1,0:nz+1), &
            u2(0:nx+1,0:ny+1,0:nz+1), &
            u3(0:nx+1,0:ny+1,0:nz+1), &
