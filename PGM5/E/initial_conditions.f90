@@ -45,6 +45,8 @@ contains
 
     type (thermal), allocatable, dimension(:) :: therms
     integer, parameter :: iounit = 11
+
+    ! read thermal data from input.. feel like this should be wrapped, somehow
     open(unit=iounit,file='thermals.input',status='old')
     rewind(iounit)
     read(iounit,*) numthermals
