@@ -28,6 +28,7 @@ contains
     real, dimension(:), intent(inout) :: rho_t, rho_w
     real :: pi
     type (mesh), intent(in) :: m
+    integer :: numthermals
  
     real, parameter :: Thetabar = 300.0
     real, parameter :: g = 9.81
@@ -39,27 +40,23 @@ contains
     real, parameter :: flag = 9999.0
 
     real :: ranval, rand
-    integer :: i, j, k
-    real :: r1, r2, x, y, z
+    integer :: i, j, k, ii
+    real :: d, x, y, z
 
-    type (thermal) t1, t2
-    t1%x = 250.0
-    t1%y = 8250.0
-    t1%z = 4250.0
-    t2%x = 16250.0
-    t2%y = 8250.0
-    t2%z = 4250.0
-    t1%rx = 4000.0
-    t1%ry = 999999.0
-    t1%rz = 4000.0
-    t2%rx = 4000.0
-    t2%ry = 999999.0
-    t2%rz = 4000.0
-    t1%dtPrime = -20.0
-    t2%dtPrime = -20.0
-    t1%dV = -25.0
-    t2%dV = 25.0
+    type (thermal), allocatable, dimension(:) :: therms
+    integer, parameter :: iounit = 11
+    open(unit=iounit,file='thermals.input',status='old')
+    rewind(iounit)
+    read(iounit,*) numthermals
+    allocate(therms(numthermals))    
 
+    do i = 1, numthermals
+      read(iounit,*) therms(i)%x, therms(i)%y, therms(i)%z, &
+                     therms(i)%rx, therms(i)%ry, therms(i)%rz, &
+                     therms(i)%dtPrime, therms(i)%dU, therms(i)%dV, therms(i)%dW
+    end do
+    close (iounit)
+    
     pi = 4.0 * atan(1.0)
 
     ! base state vertical profiles
@@ -89,6 +86,8 @@ contains
     ! Loop over physical domain.
     t = Thetabar
     v = 0.0
+    
+    do ii = 1, numthermals 
     do k = 1, m%nz    
        do j = 1, m%ny
           do i = 1, m%nx
@@ -97,25 +96,19 @@ contains
              x = real(i - 1) * m%dx + m%dx / 2.0
              y = real(j - 1) * m%dy + m%dy / 2.0
              z = real(k - 1) * m%dz + m%dz / 2.0
-                         
-             r1 = sqrt(((x - t1%x)/t1%rx)**2 + &
-                       ((y - t1%y)/t1%ry)**2 + &
-                       ((z - t1%z)/t1%rz)**2)
-
-             r2 = sqrt(((x - t2%x)/t2%rx)**2 + &
-                       ((y - t2%y)/t2%ry)**2 + &
-                       ((z - t2%z)/t2%rz)**2)
+                        
+             d = sqrt(((x - therms(ii)%x)/therms(ii)%rx)**2 + &
+                       ((y - therms(ii)%y)/therms(ii)%ry)**2 + &
+                       ((z - therms(ii)%z)/therms(ii)%rz)**2)
              
-             if (r1 <= 1.0) then 
-                t(i,j,k) = t(i,j,k) + (t1%dtPrime * (cos(r1 * pi) + 1.0)/2.0)
-                v(i,j,k) = v(i,j,k) + (t1%dV * (cos(r1 * pi) + 1.0)/2.0)
-              else if (r2 <= 1.0) then
-                 t(i,j,k) = t(i,j,k) + (t2%dtPrime * (cos(r2 * pi) + 1.0)/2.0)
-                 v(i,j,k) = v(i,j,k) + (t2%dV * (cos(r2 * pi) + 1.0)/2.0)
+             if (d <= 1.0) then 
+                t(i,j,k) = t(i,j,k) + (therms(ii)%dtPrime * (cos(d * pi) + 1.0)/2.0)
+                v(i,j,k) = v(i,j,k) + (therms(ii)%dV * (cos(d * pi) + 1.0)/2.0)
              end if
              
           enddo
        enddo
     enddo
+    enddo 
   end subroutine ic
 end module initial_conditions
