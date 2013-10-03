@@ -38,6 +38,7 @@ contains
     real, parameter :: P_0 = 100000.0
     real, parameter :: uperturb = 1.0
     real, dimension(nz) :: zed, Tbar, Pbar
+    real, parameter :: flag = 9999.0
 
     real :: ranval, rand
     integer :: i, j, k
@@ -66,8 +67,8 @@ contains
     do k = 2, nz
        rho_w(k) = 0.5 * (rho_t(k) + rho_t(k-1))
     end do
-    rho_w(1) = 9999.0       ! flag -- unused
-    rho_w(nz+1) = 9999.0    ! flag -- unused
+    rho_w(1) = flag
+    rho_w(nz+1) = flag
        
     ! Loop over physical domain.
     t = Thetabar
