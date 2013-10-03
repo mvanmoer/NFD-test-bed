@@ -66,7 +66,7 @@ contains
    
     do k = 1, m%nz
        ! height in meters at Theta,u,pPrime levels
-       zed(k) = m%dz / 2.0 + m%dz * real(k - 1)
+       zed(k) = m%dz * 0.5 + m%dz * real(k - 1)
 
        ! temperature in Kelvins 
        Tbar(k) = Thetabar - g/c_p * zed(k)
@@ -95,17 +95,17 @@ contains
           do i = 1, m%nx
 
              ! physical coordinate generation
-             x = real(i - 1) * m%dx + m%dx / 2.0
-             y = real(j - 1) * m%dy + m%dy / 2.0
-             z = real(k - 1) * m%dz + m%dz / 2.0
+             x = real(i - 1) * m%dx + m%dx * 0.5
+             y = real(j - 1) * m%dy + m%dy * 0.5
+             z = real(k - 1) * m%dz + m%dz * 0.5
                         
              d = sqrt(((x - therms(ii)%x)/therms(ii)%rx)**2 + &
                        ((y - therms(ii)%y)/therms(ii)%ry)**2 + &
                        ((z - therms(ii)%z)/therms(ii)%rz)**2)
              
              if (d <= 1.0) then 
-                t(i,j,k) = t(i,j,k) + (therms(ii)%dtPrime * (cos(d * pi) + 1.0)/2.0)
-                v(i,j,k) = v(i,j,k) + (therms(ii)%dV * (cos(d * pi) + 1.0)/2.0)
+                t(i,j,k) = t(i,j,k) + (therms(ii)%dtPrime * (cos(d * pi) + 1.0)*0.5)
+                v(i,j,k) = v(i,j,k) + (therms(ii)%dV * (cos(d * pi) + 1.0)*0.5)
              end if
              
           enddo
