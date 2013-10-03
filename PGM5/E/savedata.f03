@@ -28,6 +28,7 @@
 !  -- added interface to handle writing single scalar OR combining separate
 !     scalars as interleaved vectorcomponents
 module savedata
+    use mesh_type
     implicit none
     public
     interface savefield
@@ -35,12 +36,12 @@ module savedata
         module procedure save3DVectorComponents
     end interface savefield
 contains
-    subroutine saveScalar(name,step,field,nx,ny,nz)
+    subroutine saveScalar(name,step,field,m)
 
-        integer, intent(in)                     :: nx, ny, nz
+        type (mesh), intent(in) :: m
         character(len=*), intent(in)            :: name
         integer, intent(in)                     :: step 
-        real,dimension (nx,ny,nz), intent(in)   :: field
+        real,dimension (m%nx,m%ny,m%nz), intent(in)   :: field
 
         integer,parameter :: iounit=11
         character(len=256) :: outfile
@@ -60,12 +61,11 @@ contains
 
     end subroutine saveScalar
     
-    subroutine save3DVectorComponents(name,step,x,y,z,nx,ny,nz)
-    
-        integer, intent(in) :: nx, ny, nz
+    subroutine save3DVectorComponents(name,step,x,y,z,m)
+        type (mesh), intent(in) :: m 
         character(len=*), intent(in) :: name
         integer, intent(in) :: step
-        real,dimension(nx,ny,nz), intent(in) :: x, y, z
+        real,dimension(m%nx,m%ny,m%nz), intent(in) :: x, y, z
 
         integer, parameter :: iounit=11
         character(len=256) :: outfile
@@ -78,9 +78,9 @@ contains
         print*,'Writing unformated, interleaved 3-component file: '//outfile       
         open(unit=iounit,access='stream',file=outfile,status='replace')
 
-        do k = 1, nz
-            do j = 1, ny
-                do i = 1, nx
+        do k = 1, m%nz
+            do j = 1, m%ny
+                do i = 1, m%nx
                     write(iounit) x(i,j,k)
                     write(iounit) y(i,j,k)
                     write(iounit) z(i,j,k)

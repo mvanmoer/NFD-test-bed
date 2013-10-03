@@ -4,6 +4,7 @@
 !  First set the "base state vertical profiles"
 
 module initial_conditions
+  use mesh_type
   implicit none
   public    
   type thermal
@@ -13,7 +14,7 @@ module initial_conditions
     real :: dU, dV, dW
   end type thermal
 contains  
-  subroutine ic(t, u, v, rho_t, rho_w, nx, ny, nz, dx, dy, dz)
+  subroutine ic(t, u, v, rho_t, rho_w, m)
 
     ! t -- "theta", 3D array of scalars
     ! u -- 3D array of momentum u-component
@@ -26,8 +27,7 @@ contains
     real, dimension(:,:,:), intent(inout) :: t, u, v
     real, dimension(:), intent(inout) :: rho_t, rho_w
     real :: pi
-    real, intent(in) :: dx, dy, dz
-    integer, intent(in) :: nx, ny, nz
+    type (mesh), intent(in) :: m
  
     real, parameter :: Thetabar = 300.0
     real, parameter :: g = 9.81
@@ -35,7 +35,7 @@ contains
     real, parameter :: R_d = 287.0
     real, parameter :: P_0 = 100000.0
     real, parameter :: uperturb = 1.0
-    real, dimension(nz) :: zed, Tbar, Pbar
+    real, dimension(m%nz) :: zed, Tbar, Pbar
     real, parameter :: flag = 9999.0
 
     real :: ranval, rand
@@ -65,9 +65,9 @@ contains
     ! base state vertical profiles
     ! each z-slice is the same
    
-    do k = 1, nz
+    do k = 1, m%nz
        ! height in meters at Theta,u,pPrime levels
-       zed(k) = dz / 2.0 + dz * real(k - 1)
+       zed(k) = m%dz / 2.0 + m%dz * real(k - 1)
 
        ! temperature in Kelvins 
        Tbar(k) = Thetabar - g/c_p * zed(k)
@@ -80,23 +80,23 @@ contains
     end do
 
     ! rho_w is staggered from rho_t
-    do k = 2, nz
+    do k = 2, m%nz
        rho_w(k) = 0.5 * (rho_t(k) + rho_t(k-1))
     end do
     rho_w(1) = flag
-    rho_w(nz+1) = flag
+    rho_w(m%nz+1) = flag
        
     ! Loop over physical domain.
     t = Thetabar
     v = 0.0
-    do k = 1, nz    
-       do j = 1, ny
-          do i = 1, nx
+    do k = 1, m%nz    
+       do j = 1, m%ny
+          do i = 1, m%nx
 
              ! physical coordinate generation
-             x = real(i - 1) * dx + dx / 2.0
-             y = real(j - 1) * dy + dy / 2.0
-             z = real(k - 1) * dz + dz / 2.0
+             x = real(i - 1) * m%dx + m%dx / 2.0
+             y = real(j - 1) * m%dy + m%dy / 2.0
+             z = real(k - 1) * m%dz + m%dz / 2.0
                          
              r1 = sqrt(((x - t1%x)/t1%rx)**2 + &
                        ((y - t1%y)/t1%ry)**2 + &
