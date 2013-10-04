@@ -6,6 +6,7 @@
 !
 module diffusion
   use mesh_type
+  use fson
   implicit none
   public
 contains
@@ -21,11 +22,12 @@ contains
 
     real :: del_xx = 0.0, del_yy = 0.0, del_zz = 0.0, tBar = 300.0
     integer :: i, j, k
-    integer, parameter :: iounit = 11
-    open(unit=iounit,file='diff.input',status='old')
-    rewind(iounit)
-    read(iounit,*) K_t, K_m
-    close(iounit)
+    type(fson_value), pointer :: config
+  
+    config => fson_parse("highres.json")
+    call fson_get(config, "K_t", K_t)
+    call fson_get(config, "K_m", K_m)
+    call fson_destroy(config)
  
     tprime = t - tBar
 
