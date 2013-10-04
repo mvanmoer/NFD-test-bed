@@ -24,8 +24,14 @@ contains
     real :: tBar = 300.0, g = 9.81
  
     ! low res
-    real :: c_s = 100.0
+    real :: c_s
     integer :: i, j, k
+
+    integer, parameter :: iounit = 11
+    open(unit=iounit,file='pgf.input',status='old')
+    rewind(iounit)
+    read(iounit,*) c_s
+    close (iounit)
 
     tprime = t2(1:m%nx,1:m%ny,1:m%nz) - tBar
 
