@@ -112,5 +112,17 @@ contains
        enddo
     enddo
     enddo 
+! Test F U perturbations
+    call random_seed()
+    do k = 1, m%nz
+       do j = 1, m%ny
+          do i = 1, m%nx + 1
+             call random_number(ranval)
+             u(i,j,k) = (ranval - 0.5) * therms(1)%dU 
+          end do
+       end do
+    end do
+
+
   end subroutine ic
 end module initial_conditions
