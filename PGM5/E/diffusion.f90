@@ -16,13 +16,17 @@ contains
     real, dimension(0:m%nx+1,0:m%ny+1,0:m%nz+1), intent(inout) :: u3,v3,w3,u1,v1,w1
     real, intent(in) :: CTdt
 
-    ! low res
-    real :: K_t = 5.0
-    real :: K_m = 50.0
+    real :: K_t
+    real :: K_m
 
     real :: del_xx = 0.0, del_yy = 0.0, del_zz = 0.0, tBar = 300.0
     integer :: i, j, k
-    
+    integer, parameter :: iounit = 11
+    open(unit=iounit,file='diff.input',status='old')
+    rewind(iounit)
+    read(iounit,*) K_t, K_m
+    close(iounit)
+ 
     tprime = t - tBar
 
 !$OMP   PARALLEL DO PRIVATE (i,j,k)
