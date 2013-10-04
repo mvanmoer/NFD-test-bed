@@ -13,8 +13,8 @@ program pgm5
   use pgf_bouyancy
   use diffusion
   use savedata
-  use read_parameters_module 
   use mesh_type
+  use fson
   implicit none
   type (mesh) m
   !integer :: nx, ny, nz
@@ -36,8 +36,18 @@ program pgm5
 
   integer :: n, nstep, nplot
   integer :: i, j, k
-
-  call read_parameters("inputfile", m, dt, nstep, nplot) 
+   
+  type(fson_value), pointer :: config
+  config => fson_parse("highres.json")
+  call fson_get(config, "nx", m%nx)
+  call fson_get(config, "ny", m%ny)
+  call fson_get(config, "nz", m%nz)
+  call fson_get(config, "dx", m%dx)
+  call fson_get(config, "dy", m%dy)
+  call fson_get(config, "dz", m%dz)
+  call fson_get(config, "dt", dt)
+  call fson_get(config, "nstep", nstep)
+  call fson_get(config, "nplot", nplot)
 
   allocate(u1(0:m%nx+1,0:m%ny+1,0:m%nz+1), &
            u2(0:m%nx+1,0:m%ny+1,0:m%nz+1), &
