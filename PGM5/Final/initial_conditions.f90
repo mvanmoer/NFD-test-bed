@@ -5,6 +5,9 @@
 
 module initial_conditions
   use mesh_type
+  use fson
+  use fson_path_m
+  use fson_value_m
   implicit none
   public    
   type thermal
