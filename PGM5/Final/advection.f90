@@ -1,14 +1,14 @@
 ! advection.f90 
 ! Mark Van Moer, ATMS502 Fall 2011
 ! module contains subroutine for performing advection 
-! along 1D array. Program 5/6 uses Piecewise-Linear from 
+! along 1D array. Uses Piecewise-Linear from 
 ! program 3 extra credit.
 module advection
   implicit none
   public
 contains
-  ! advect1D - performs advection along 1D array
   subroutine advect1D(s1, s2, vel, dx, dt)
+    ! advect1D - performs advection along 1D array
     ! s1  -- (-1:nx+2) input vector of current timestep scalars
     ! s2  -- (-1:nx+2) output vector of next timestep scalars
     ! vel -- (0:nx+1)  input vector of staggered C-grid velocities
