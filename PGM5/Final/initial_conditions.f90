@@ -16,6 +16,7 @@ module initial_conditions
     real :: dtPrime
     real :: dU, dV, dW
   end type thermal
+  type (thermal), allocatable, dimension(:) :: therms
 contains  
   subroutine ic(t, u, v, rho_t, rho_w, m)
 
@@ -46,7 +47,7 @@ contains
     integer :: i, j, k, ii
     real :: d, x, y, z
 
-    type (thermal), allocatable, dimension(:) :: therms
+
     integer, parameter :: iounit = 11
 
     type(fson_value), pointer :: value
