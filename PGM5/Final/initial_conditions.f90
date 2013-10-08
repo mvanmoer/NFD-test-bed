@@ -31,7 +31,7 @@ contains
     real, dimension(:), intent(inout) :: rho_t, rho_w
     real :: pi
     type (mesh), intent(in) :: m
-    integer :: numthermals
+    integer :: numthermals, count
  
     real, parameter :: Thetabar = 300.0
     real, parameter :: g = 9.81
@@ -49,6 +49,9 @@ contains
     type (thermal), allocatable, dimension(:) :: therms
     integer, parameter :: iounit = 11
 
+    type(fson_value), pointer :: value, p
+    character(len=80) :: therm_json_path
+
     ! read thermal data from input.. feel like this should be wrapped, somehow
     open(unit=iounit,file='thermals.input',status='old')
     rewind(iounit)
@@ -61,7 +64,14 @@ contains
                      therms(i)%dtPrime, therms(i)%dU, therms(i)%dV, therms(i)%dW
     end do
     close (iounit)
-    
+   
+    value => fson_parse("highres.json")
+!    call fson_path_get(value, therm_json_path, p)
+!    count = fson_value_count(p)
+!    print *, "json numthermals: ", count 
+
+    call fson_destroy(value)
+!    call fson_destroy(p) 
     pi = 4.0 * atan(1.0)
 
     ! base state vertical profiles
