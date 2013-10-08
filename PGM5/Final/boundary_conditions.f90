@@ -17,8 +17,6 @@ contains
          v1, v2, v3, w1, w2, w3
     real, dimension(-1:m%nx+2,-1:m%ny+2,-1:m%nz+2), intent(inout) :: t1, t2
     real, dimension(0:m%nx+1,0:m%ny+1,1:m%nz), intent(inout) :: p1, p2
-    !integer, intent(in) :: nx, ny, nz
-    
     integer :: i, j, k
 
 !$OMP     PARALLEL DO PRIVATE (i,j,k)
