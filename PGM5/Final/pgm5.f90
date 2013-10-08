@@ -34,9 +34,12 @@ program pgm5
 
   integer :: n, nstep, nplot
   integer :: i, j, k
-   
+  character(len=80) :: fsonFile
   type(fson_value), pointer :: config
-  config => fson_parse("highres.json")
+  
+  call get_command_argument(1, fsonFile)
+
+  config => fson_parse(fsonFile)
   call fson_get(config, "nx", m%nx)
   call fson_get(config, "ny", m%ny)
   call fson_get(config, "nz", m%nz)
