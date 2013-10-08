@@ -32,7 +32,7 @@ contains
     real, dimension(:), intent(inout) :: rho_t, rho_w
     real :: pi
     type (mesh), intent(in) :: m
-    integer :: numthermals, count
+    integer :: numthermals
  
     real, parameter :: Thetabar = 300.0
     real, parameter :: g = 9.81
@@ -50,33 +50,19 @@ contains
 
     integer, parameter :: iounit = 11
 
-    type(fson_value), pointer :: value
-    type(fson_value), pointer :: p
+    type(fson_value), pointer :: config, therm_array
     character(len=80) :: therm_json_path
 
-    ! read thermal data from input.. feel like this should be wrapped, somehow
-    open(unit=iounit,file='thermals.input',status='old')
-    rewind(iounit)
-    read(iounit,*) numthermals
-    allocate(therms(numthermals))    
-
-    do i = 1, numthermals
-      read(iounit,*) therms(i)%x, therms(i)%y, therms(i)%z, &
-                     therms(i)%rx, therms(i)%ry, therms(i)%rz, &
-                     therms(i)%dtPrime, therms(i)%dU, therms(i)%dV, therms(i)%dW
-    end do
-    close (iounit)
-   
-    value => fson_parse("highres.json")
+    config => fson_parse("highres.json")
     ! can't seem to pass a literal string
     therm_json_path = "thermals"
-    call fson_path_get(value, therm_json_path, p)
-    print *, "thermal json path: ", therm_json_path
-    count = fson_value_count(p)
-    print *, "json numthermals: ", count 
+    call fson_path_get(config, therm_json_path, therm_array)
+    numthermals = fson_value_count(therm_array)
+    allocate(therms(numthermals))    
+    call fson_get(config, therm_json_path, therm_callback)
 
-    call fson_destroy(value)
-    call fson_destroy(p) 
+    call fson_destroy(config)
+    call fson_destroy(therm_array) 
     pi = 4.0 * atan(1.0)
 
     ! base state vertical profiles
@@ -140,7 +126,19 @@ contains
           end do
        end do
     end do
-
-
   end subroutine ic
+  subroutine therm_callback(element, i, c)
+    type(fson_value), pointer :: element
+    integer :: i, c
+    call fson_get(element, "x", therms(i)%x)
+    call fson_get(element, "y", therms(i)%y)
+    call fson_get(element, "z", therms(i)%z)
+    call fson_get(element, "rx", therms(i)%rx)
+    call fson_get(element, "ry", therms(i)%ry)
+    call fson_get(element, "rz", therms(i)%rz)
+    call fson_get(element, "dtPrime", therms(i)%dtPrime)
+    call fson_get(element, "dU", therms(i)%dU)
+    call fson_get(element, "dV", therms(i)%dV)
+    call fson_get(element, "dW", therms(i)%dW)
+  end subroutine therm_callback
 end module initial_conditions
