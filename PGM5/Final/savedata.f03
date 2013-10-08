@@ -73,7 +73,7 @@ contains
         integer :: i, j, k
 
         write(int2str,*) step
-        outfile = name//"."//trim(adjustl(int2str))//".vec"
+        outfile = name//"."//trim(adjustl(int2str))//".vec.raw"
 
         print*,'Writing unformated, interleaved 3-component file: '//outfile       
         open(unit=iounit,access='stream',file=outfile,status='replace')
