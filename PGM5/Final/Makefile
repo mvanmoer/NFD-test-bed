@@ -11,13 +11,10 @@ FCFLAGS = -ffree-form -O3 $(FSONDIR) -o $@ $(FSONLIB)
 
 OBJECTS = advection.o initial_conditions.o integration.o \
 	 boundary_conditions.o savedata.o diffusion.o \
-	 pgf_bouyancy.o readinputparameters.o mesh.o pgm5.o 
+	 pgf_bouyancy.o mesh.o pgm5.o 
 
 # NOTE: might need dependencies to be .o instead of .mod depending
 # on system/compiler.
-
-
-
 
 all: $(PRG)
 
@@ -36,7 +33,7 @@ integration.o: integration.f90 advection.mod mesh_type.mod
 
 pgm5.o: pgm5.f90 integration.mod diffusion.mod \
 	initial_conditions.mod boundary_conditions.mod \
-	pgf_bouyancy.mod savedata.mod read_parameters_module.mod mesh_type.mod
+	pgf_bouyancy.mod savedata.mod mesh_type.mod
 	$(FC) -c $(FCFLAGS) $<
 
 pgm5: $(OBJECTS)
