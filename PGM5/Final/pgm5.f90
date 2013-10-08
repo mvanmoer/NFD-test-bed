@@ -73,7 +73,7 @@ program pgm5
 
   ! set initial conditions
   call ic(t1(1:m%nx,1:m%ny,1:m%nz), u1(1:m%nx+1,1:m%ny,1:m%nz), v1(1:m%nx,1:m%ny+1,1:m%nz), &
-       rho_t, rho_w, m)
+       rho_t, rho_w, m, fsonFile)
 
   ! everything else is zeros
   p1 = 0.0
