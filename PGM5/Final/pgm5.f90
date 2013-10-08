@@ -16,9 +16,7 @@ program pgm5
   use mesh_type
   use fson
   implicit none
-  type (mesh) m
-  !integer :: nx, ny, nz
-  !real :: dx, dy, dz
+  type(mesh) m
   real :: dt
 
   real :: CTdt ! dt for centered time
@@ -130,8 +128,6 @@ program pgm5
      call pgf(u3, v3, w3, p3, p1, t2, rho_t, rho_w, &
           m, CTdt)
 
-     
-
      ! array update
      ! -- currently doing theta update in advect1D
      if (n .ne. 1) then
@@ -232,12 +228,8 @@ contains
        end do
     end if
 
-!   call savefield("U", step, plotU, nx, ny, nz)
-!   call savefield("V", step, plotV, nx, ny, nz)
-!   call savefield("W", step, plotW, nx, ny, nz)
     call savefield("test", step, plotU, plotV, plotW, m)
     call savefield("T", step, tprime(1:m%nx,1:m%ny,1:m%nz), m) 
     call savefield("P", step, p3(1:m%nx,1:m%ny,1:m%nz), m)
-
   end subroutine plotunstaggered
 end program pgm5
