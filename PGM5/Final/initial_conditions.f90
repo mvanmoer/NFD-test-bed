@@ -49,7 +49,8 @@ contains
     type (thermal), allocatable, dimension(:) :: therms
     integer, parameter :: iounit = 11
 
-    type(fson_value), pointer :: value, p
+    type(fson_value), pointer :: value
+    type(fson_value), pointer :: p
     character(len=80) :: therm_json_path
 
     ! read thermal data from input.. feel like this should be wrapped, somehow
@@ -66,12 +67,15 @@ contains
     close (iounit)
    
     value => fson_parse("highres.json")
-!    call fson_path_get(value, therm_json_path, p)
-!    count = fson_value_count(p)
-!    print *, "json numthermals: ", count 
+    ! can't seem to pass a literal string
+    therm_json_path = "thermals"
+    call fson_path_get(value, therm_json_path, p)
+    print *, "thermal json path: ", therm_json_path
+    count = fson_value_count(p)
+    print *, "json numthermals: ", count 
 
     call fson_destroy(value)
-!    call fson_destroy(p) 
+    call fson_destroy(p) 
     pi = 4.0 * atan(1.0)
 
     ! base state vertical profiles
