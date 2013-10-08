@@ -2,7 +2,6 @@
 !  Mark Van Moer, ATMS502 Fall 2011
 !  Sets the initial conditions.
 !  First set the "base state vertical profiles"
-
 module initial_conditions
   use mesh_type
   use fson
@@ -16,22 +15,24 @@ module initial_conditions
     real :: dtPrime
     real :: dU, dV, dW
   end type thermal
+  ! needs to be global so callback can see it.
   type (thermal), allocatable, dimension(:) :: therms
 contains  
-  subroutine ic(t, u, v, rho_t, rho_w, m)
-
+  subroutine ic(t, u, v, rho_t, rho_w, m, fsonFile)
     ! t -- "theta", 3D array of scalars
     ! u -- 3D array of momentum u-component
     ! v -- 3D array of momentum v-component
-    ! w -- 3D array of momentum w-component
-    ! p -- 3D array of pressure
     ! rho_t -- 1D array of density at Theta, u, pprime levels
     ! rho_w -- 1D array of density at w levels
+    ! fsonFile -- path to json config file
+
 
     real, dimension(:,:,:), intent(inout) :: t, u, v
     real, dimension(:), intent(inout) :: rho_t, rho_w
-    real :: pi
     type (mesh), intent(in) :: m
+    character(len=*), intent(in) :: fsonFile
+
+    real :: pi
     integer :: numthermals
  
     real, parameter :: Thetabar = 300.0
@@ -47,23 +48,19 @@ contains
     integer :: i, j, k, ii
     real :: d, x, y, z
 
-
-    integer, parameter :: iounit = 11
-
     type(fson_value), pointer :: config, therm_array
     character(len=80) :: therm_json_path
+    pi = 4.0 * atan(1.0)
 
-    config => fson_parse("highres.json")
+    config => fson_parse(fsonFile)
     ! can't seem to pass a literal string
     therm_json_path = "thermals"
     call fson_path_get(config, therm_json_path, therm_array)
     numthermals = fson_value_count(therm_array)
     allocate(therms(numthermals))    
     call fson_get(config, therm_json_path, therm_callback)
-
     call fson_destroy(config)
     call fson_destroy(therm_array) 
-    pi = 4.0 * atan(1.0)
 
     ! base state vertical profiles
     ! each z-slice is the same
