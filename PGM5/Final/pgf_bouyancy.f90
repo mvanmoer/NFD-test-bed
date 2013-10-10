@@ -10,7 +10,7 @@ module pgf_bouyancy
   public
 contains
   subroutine pgf(u3, v3, w3, p3, p1, t2, rho_t, rho_w, &
-       m, CTdt)
+       m, CTdt, fsonFile)
     type (mesh), intent(in) :: m
     real, dimension(0:m%nx+1,0:m%ny+1,0:m%nz+1), intent(inout) :: u3
     real, dimension(0:m%nx+1,0:m%ny+1,0:m%nz+1), intent(inout) :: v3
@@ -21,7 +21,8 @@ contains
     real, dimension(1:m%nz+1), intent(in) :: rho_w
     real, intent(in) :: CTdt
     real, dimension(1:m%nx,1:m%ny,1:m%nz) :: tprime
- 
+    character(len=*), intent(in) :: fsonFile
+  
     type(fson_value), pointer :: config
     real :: tBar = 300.0, g = 9.81
  
@@ -34,7 +35,7 @@ contains
     !rewind(iounit)
     !read(iounit,*) c_s
     !close (iounit)
-    config => fson_parse("highres.json")
+    config => fson_parse(fsonFile)
     call fson_get(config, "c_s", c_s)
 
     call fson_destroy(config)

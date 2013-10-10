@@ -124,12 +124,12 @@ program pgm5
      ! Passes Test C
      ! t1a is unadvected t1, t2 is advected t1
      call diff(t1a, u3, v3, w3, u1, v1, w1, &
-          m, CTdt) 
+          m, CTdt, fsonFile) 
 
      ! call PGF
      ! Passes Test B
      call pgf(u3, v3, w3, p3, p1, t2, rho_t, rho_w, &
-          m, CTdt)
+          m, CTdt, fsonFile)
 
      ! array update
      ! -- currently doing theta update in advect1D

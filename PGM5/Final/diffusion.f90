@@ -10,12 +10,13 @@ module diffusion
   implicit none
   public
 contains
-  subroutine diff(t, u3, v3, w3, u1, v1, w1, m, CTdt)
+  subroutine diff(t, u3, v3, w3, u1, v1, w1, m, CTdt, fsonFile)
     type (mesh), intent(in) :: m
     real, dimension(-1:m%nx+2,-1:m%ny+2,-1:m%nz+2), intent(inout) :: t
     real, dimension(-1:m%nx+2,-1:m%ny+2,-1:m%nx+2) :: tprime
     real, dimension(0:m%nx+1,0:m%ny+1,0:m%nz+1), intent(inout) :: u3,v3,w3,u1,v1,w1
     real, intent(in) :: CTdt
+    character(len=*), intent(in) :: fsonFile
 
     real :: K_t
     real :: K_m
@@ -24,7 +25,7 @@ contains
     integer :: i, j, k
     type(fson_value), pointer :: config
   
-    config => fson_parse("highres.json")
+    config => fson_parse(fsonFile)
     call fson_get(config, "K_t", K_t)
     call fson_get(config, "K_m", K_m)
     call fson_destroy(config)
