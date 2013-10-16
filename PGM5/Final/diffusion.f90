@@ -32,7 +32,6 @@ contains
  
     tprime = t - tBar
 
-!$OMP   PARALLEL DO PRIVATE (i,j,k)
     ! Theta
     do k = 1, m%nz
        do j = 1, m%ny
@@ -45,12 +44,10 @@ contains
           end do
        end do
     end do
-!$OMP   END PARALLEL DO
     del_xx = 0.0
     del_yy = 0.0
     del_zz = 0.0
 
-!$OMP PARALLEL DO PRIVATE (i,j,k)    
     ! U
     do k = 1, m%nz
        do j = 1, m%ny
@@ -62,12 +59,10 @@ contains
           end do
        end do
     end do
-!$OMP END PARALLEL DO
     del_xx = 0.0
     del_yy = 0.0
     del_zz = 0.0
 
-!$OMP PARALLEL DO PRIVATE (i,j,k)
     ! V
     do k = 1, m%nz
        do j = 1, m%ny
@@ -80,12 +75,10 @@ contains
        end do
     end do
 
-!$OMP END PARALLEL DO
     del_xx = 0.0
     del_yy = 0.0
     del_zz = 0.0
 
-!$OMP PARALLEL DO PRIVATE (i,j,k)
 
     ! W
     do k = 2, m%nz
@@ -98,7 +91,6 @@ contains
           end do
        end do
     end do
-!$OMP END PARALLEL DO
 
    end subroutine diff
 end module diffusion

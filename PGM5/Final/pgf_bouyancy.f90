@@ -48,7 +48,6 @@ contains
 ! or is it already smart enough to do that?
 ! that is, is there an implied sequence point after each directive?
 
-    !$OMP PARALLEL DO PRIVATE (i,j,k)
     ! u3 terms
     do k = 1, m%nz
        do j = 1, m%ny
@@ -58,10 +57,8 @@ contains
           end do
        end do
     end do
-    !$OMP END PARALLEL DO
 
 
-    !$OMP PARALLEL DO PRIVATE (i,j,k)
     !       ! v3 terms
     do k = 1, m%nz
        do j = 1, m%ny 
@@ -71,9 +68,7 @@ contains
           end do
        end do
     end do
-    !$OMP END PARALLEL DO
 
-    !$OMP PARALLEL DO PRIVATE (i,j,k)
     ! w3 terms
     do k = 2, m%nz
        do j = 1, m%ny
@@ -84,12 +79,10 @@ contains
           end do
        end do
     end do
-    !$OMP END PARALLEL DO
 
     ! set BCs here
     call uvw_bc()
 
-    !$OMP PARALLEL DO PRIVATE (i,j,k)
     ! p3 terms
     do k = 1, m%nz
        do j = 1, m%ny
@@ -101,7 +94,6 @@ contains
           end do
        end do
     end do
-    !$OMP END PARALLEL DO            
 
   contains
     subroutine uvw_bc()

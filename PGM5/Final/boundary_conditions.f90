@@ -19,7 +19,6 @@ contains
     real, dimension(0:m%nx+1,0:m%ny+1,1:m%nz), intent(inout) :: p1, p2
     integer :: i, j, k
 
-!$OMP     PARALLEL DO PRIVATE (i,j,k)
       do k = 1, m%nz
         do j = 1, m%ny
           u1(1   ,j,k) = -u1(2 ,j,k)
@@ -41,8 +40,6 @@ contains
           u3(i,m%ny+1,k) = u3(i, 1  ,k)
         enddo
       enddo
-!$OMP     END PARALLEL DO
-!$OMP     PARALLEL DO PRIVATE (i,j,k)
       do k = 1,m%nz
         do i = 1,m%nx
           v1(i,m%ny+1,k) =  v1(i  ,1 ,k)
@@ -61,8 +58,6 @@ contains
           v3(m%nx+1,j,k) = v3(m%nx-1,j,k)
         enddo
       enddo
-!$OMP     END PARALLEL DO
-!$OMP     PARALLEL DO PRIVATE (i,j,k)
       do k = 2, m%nz
         do j = 1, m%ny
           w1(0   ,j,k) = w1(2   ,j,k)
@@ -81,8 +76,6 @@ contains
           w3(i,m%ny+1,k) = w3(i,  1 ,k)
         enddo
       enddo
-!$OMP     END PARALLEL DO
-!$OMP     PARALLEL DO PRIVATE (i,j,k)
       do k = 1, m%nz
         do j = 1, m%ny
           t1( 0  ,j,k) = t1(2   ,j,k)
@@ -105,8 +98,6 @@ contains
           t2(i,m%ny+2,k) = t2(i,  2 ,k)
        enddo
       enddo
-!$OMP     END PARALLEL DO
-!$OMP     PARALLEL DO PRIVATE (i,j,k)
       do k = 1,m%nz
         do j = 1,m%ny
           p1(0   ,j,k) = p1(2   ,j,k)
@@ -121,13 +112,11 @@ contains
           p2(i,m%ny+1,k) = p2(i,  1 ,k)
         enddo
       enddo
-!$OMP     END PARALLEL DO
 
 !
 ! ... 0-gradient top, bottom
 !
 
-!$OMP   PARALLEL DO PRIVATE (i,j)
     do j = 0,m%ny+1
       do i = 0,m%nx+1
         u1(i,j,m%nz+1) = u1(i,j,m%nz)
@@ -157,8 +146,6 @@ contains
         w3(i,j,m%nz+1) = 0.
       enddo
     enddo
-!$OMP   END PARALLEL DO
-!$OMP   PARALLEL DO PRIVATE (i,j)
     do j = -1,m%ny+2
           do i = -1,m%nx+2
             t1(i,j,0   ) = t1(i,j,1 )
@@ -171,7 +158,6 @@ contains
             t2(i,j,m%nz+2) = t2(i,j,m%nz)
          enddo
     enddo
-!$OMP   END PARALLEL DO
   end subroutine bc
 end module boundary_conditions
 
