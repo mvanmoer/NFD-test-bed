@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project (Final Fortran)
+project (Serial Fortran)
 
 set (PGM5_SRCS advection.f90 boundary_conditions.f90 diffusion.f90 initial_conditions.f90 integration.f90 mesh.f90 pgf_bouyancy.f90 pgm5.f90 savedata.f90)
 
