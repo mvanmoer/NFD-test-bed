@@ -1,7 +1,5 @@
+! pgf_bouyancy.f90
 ! Pressure Gradient Forces and Bouyancy
-! Program 5
-! ATMS 502 Fall 2011
-! Mark Van Moer
 ! Computes the pgf and bouyancy components for u,v,w
 module pgf_bouyancy
   use mesh_type
@@ -30,23 +28,12 @@ contains
     real :: c_s
     integer :: i, j, k
 
-    !integer, parameter :: iounit = 11
-    !open(unit=iounit,file='pgf.input',status='old')
-    !rewind(iounit)
-    !read(iounit,*) c_s
-    !close (iounit)
     config => fson_parse(fsonFile)
     call fson_get(config, "c_s", c_s)
 
     call fson_destroy(config)
 
     tprime = t2(1:m%nx,1:m%ny,1:m%nz) - tBar
-
-! mvm - is it better to have 
-! a single PARALLEL that some how goes over all three of these loops
-! since they are independent ?
-! or is it already smart enough to do that?
-! that is, is there an implied sequence point after each directive?
 
     ! u3 terms
     do k = 1, m%nz
@@ -59,7 +46,7 @@ contains
     end do
 
 
-    !       ! v3 terms
+    ! v3 terms
     do k = 1, m%nz
        do j = 1, m%ny 
           do i = 1, m%nx
@@ -80,7 +67,7 @@ contains
        end do
     end do
 
-    ! set BCs here
+    ! set Boundary Conditions here
     call uvw_bc()
 
     ! p3 terms

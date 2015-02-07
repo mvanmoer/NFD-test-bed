@@ -1,3 +1,5 @@
+! mesh.f90
+! Simple type representing the grid mesh.
 module mesh_type
   implicit none
   public

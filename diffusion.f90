@@ -1,9 +1,4 @@
 ! diffusion.f90
-! ATMS502 Fall 2011 Program 5
-! Mark Van Moer
-!
-! Test E
-!
 module diffusion
   use mesh_type
   use fson

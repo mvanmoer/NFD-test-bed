@@ -1,4 +1,4 @@
-! mvm 20130117 -- changing from B. Jewett's
+! 20130117  
 !  -- moving to Fortran 2003 in order to use streaming access
 !  -- writing each timestep as a separate file, instead of one file containing
 !     all variables and all timesteps.

@@ -1,8 +1,5 @@
 ! boundary_conditions.f90
-! Mark Van Moer, ATMS502 Fall 2011
-! Sets the boundary conditions. Slightly altered from 
-! bjewett's website version and modularized.
-! removed q1, q2, t0, bctype, noslip
+! Sets the boundary conditions. 
 module boundary_conditions
   use mesh_type
   implicit none

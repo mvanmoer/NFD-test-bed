@@ -1,7 +1,6 @@
 !  initial_conditions.f90
-!  Mark Van Moer, ATMS502 Fall 2011
 !  Sets the initial conditions.
-!  First set the "base state vertical profiles"
+!  First sets the "base state vertical profiles"
 module initial_conditions
   use mesh_type
   use fson
@@ -113,7 +112,7 @@ contains
        enddo
     enddo
     enddo 
-! Test F U perturbations
+! U perturbations
     call random_seed()
     do k = 1, m%nz
        do j = 1, m%ny

@@ -1,8 +1,6 @@
 ! advection.f90 
-! Mark Van Moer, ATMS502 Fall 2011
 ! module contains subroutine for performing advection 
-! along 1D array. Uses Piecewise-Linear from 
-! program 3 extra credit.
+! along 1D array. Uses a Piecewise-Linear method.
 module advection
   implicit none
   public
@@ -26,12 +24,10 @@ contains
     len = size(s1) - 4 ! num ghost cells on s1/s2
     dtOverdx = dt / dx
   
-    ! Piecewise-linear from project 3.
     call piecewise_linear()
    
     return
   contains
-    ! Piecewise-Linear, EC for Program 3
     subroutine piecewise_linear()
       real :: r1, r2, dsi, dsminus1, dsplus1, F1, F2, a, b, c, d
 

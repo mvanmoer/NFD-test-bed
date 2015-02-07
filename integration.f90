@@ -1,7 +1,6 @@
-!     integration.f90
-!     Mark Van Moer, ATMS502 Fall 2011
-!     Preps 3D arrays for calls to 1D advection routine
-
+! integration.f90
+! Preps 3D arrays for calls to 1D advection routine
+! using Strang splitting.
 module integration
   use mesh_type
   implicit none
@@ -77,7 +76,6 @@ contains
               
                vv_y = (v2(i,j+1,k)**2 - v2(i,j-1,k)**2)/(4.0*m%dy)
                
-               ! on third glance, original was correct...
                wv_z = ((w2(i,j,k+1) + w2(i,j-1,k+1)) * &
                     (v2(i,j,k+1) - v2(i,j,k)) + &
                     (w2(i,j,k) + w2(i,j-1,k)) * &
