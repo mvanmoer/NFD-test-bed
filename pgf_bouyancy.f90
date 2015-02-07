@@ -36,6 +36,7 @@ contains
     tprime = t2(1:m%nx,1:m%ny,1:m%nz) - tBar
 
     ! u3 terms
+    !$omp parallel do private (i, j, k)
     do k = 1, m%nz
        do j = 1, m%ny
           do i = 2, m%nx 
@@ -44,9 +45,10 @@ contains
           end do
        end do
     end do
-
+    !$omp end parallel do
 
     ! v3 terms
+    !$omp parallel do private (i, j, k)
     do k = 1, m%nz
        do j = 1, m%ny 
           do i = 1, m%nx
@@ -55,8 +57,10 @@ contains
           end do
        end do
     end do
+    !$omp end parallel do
 
     ! w3 terms
+    !$omp parallel do private (i, j, k)
     do k = 2, m%nz
        do j = 1, m%ny
           do i = 1, m%nx
@@ -66,11 +70,13 @@ contains
           end do
        end do
     end do
+    !$omp end parallel do
 
     ! set Boundary Conditions here
     call uvw_bc()
 
     ! p3 terms
+    !$omp parallel do private (i, j, k)
     do k = 1, m%nz
        do j = 1, m%ny
           do i = 1, m%nx
@@ -81,6 +87,7 @@ contains
           end do
        end do
     end do
+    !$omp end parallel do
 
   contains
     subroutine uvw_bc()
