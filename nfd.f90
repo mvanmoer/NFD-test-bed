@@ -1,12 +1,11 @@
-!     Program 5 - 3D nonlinear quasi-compressible flow
-!     ATMS502 Fall 2011
-!     Mark Van Moer
-!
-!     Make with supplied makefile
-!
-!  Test E
-!
-program pgm5
+! 3D nonlinear quasi-compressible flow simulation.
+! 
+! Mark Van Moer
+! Based on work done for ATMS 502, Fall 2011
+! University of Illinois at Urbana-Champaign
+! taught by Brian Jewett.
+!  
+program nfd 
   use initial_conditions
   use boundary_conditions
   use integration
@@ -114,20 +113,14 @@ program pgm5
      w3 = w1
      p3 = p1
 
-     ! call advect
-     ! Passes Tests A1-3 for theta advection
-     ! Passes Test D for Theta only advection
      call integrate(t1, t2, u1, v1, w1, u2, v2, w2, &
           u3, v3, w3, m, dt, CTdt)
     
-     ! call diffusion
-     ! Passes Test C
      ! t1a is unadvected t1, t2 is advected t1
      call diff(t1a, u3, v3, w3, u1, v1, w1, &
           m, CTdt, fsonFile) 
 
      ! call PGF
-     ! Passes Test B
      call pgf(u3, v3, w3, p3, p1, t2, rho_t, rho_w, &
           m, CTdt, fsonFile)
 
@@ -173,7 +166,7 @@ program pgm5
 
 contains
   ! unstaggers u,v,w and plots along with theta prime and p
-  ! Tried OMP triple-loops here, but this was causing the crashes
+  ! Tried OMP triple-loops here, but this was causing crashes
   ! Going with regular loops.
   subroutine plotunstaggered(step)
     integer, intent(in) :: step
@@ -235,4 +228,4 @@ contains
     call savefield("T", step, tprime(1:m%nx,1:m%ny,1:m%nz), m) 
     call savefield("P", step, p3(1:m%nx,1:m%ny,1:m%nz), m)
   end subroutine plotunstaggered
-end program pgm5
+end program nfd 
