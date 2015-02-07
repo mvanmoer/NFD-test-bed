@@ -18,9 +18,11 @@ Requirements
 
 1. Build out of source, cd to build dir.
 2. ccmake ../path/to/src
-3. set build type and paths to fson mods and object file
+3. set build type and paths to fson mods and object file, mods are in dist/ and .o in build/
 4. make
 
 run as $ ./nfd ../path/to/config.json
 
 Two sample JSON config files are included, see the fortran source for explanation. highres.json will go unstable at approximately ~4700 steps.
+
+Output is RAW binary, which can be loaded directly into ParaView or other visualization packages.
