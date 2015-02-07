@@ -35,6 +35,7 @@ contains
     subroutine piecewise_linear()
       real :: r1, r2, dsi, dsminus1, dsplus1, F1, F2, a, b, c, d
 
+!$omp parallel do private (i)
       do i = 1, len
          r1 = abs(dtOverdx * vel(i))
          r2 = abs(dtOverdx * vel(i + 1))
@@ -57,6 +58,7 @@ contains
          s2(i) = s1(i) - (F2 - F1) + dtOverdx * s1(i) * (vel(i + 1) - vel(i))
          
       end do
+!$omp end parallel do
 
       ! extremely important to NOT copy ghost points!!!!
       s1(1:len) = s2(1:len)
