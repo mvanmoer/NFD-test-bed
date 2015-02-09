@@ -18,7 +18,7 @@ Requirements
 
 1. Build out of source, cd to build dir.
 2. ccmake ../path/to/src
-3. set build type and paths to fson mods and object file, mods are in dist/ and .o in build/
+3. set build type and paths to fson mods and object file.
 4. make
 
 run as $ ./nfd ../path/to/config.json
