@@ -36,7 +36,7 @@ contains
  
         print*,'Writing unformatted scalar file: '//outfile
         open(unit=iounit,access='stream',file=outfile,status='replace')
-        write(iounit) field   
+        write(iounit, *) field   
         close(iounit) 
 
     end subroutine saveScalar
@@ -61,9 +61,9 @@ contains
         do k = 1, m%nz
             do j = 1, m%ny
                 do i = 1, m%nx
-                    write(iounit) x(i,j,k)
-                    write(iounit) y(i,j,k)
-                    write(iounit) z(i,j,k)
+                    write(iounit,*) x(i,j,k)
+                    write(iounit,*) y(i,j,k)
+                    write(iounit,*) z(i,j,k)
                 end do
             end do
         end do
