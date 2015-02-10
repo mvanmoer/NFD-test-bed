@@ -43,7 +43,6 @@ contains
   contains
     subroutine uadvect()
       ! U advection  
-      !$omp parallel do private (i, j, k)
       do k = 1, m%nz
          do j = 1, m%ny
             do i = 2, m%nx
@@ -68,7 +67,6 @@ contains
 
     subroutine vadvect()
       ! V advection
-      !$omp parallel do private (i, j, k)
       do k = 1, m%nz
          do j = 1, m%ny
             do i = 1, m%nx
@@ -88,12 +86,10 @@ contains
             end do
          end do
       end do
-      !$omp end parallel do
     end subroutine vadvect
 
     subroutine wadvect
       ! W advection
-      !$omp parallel do private (i, j, k)
       do k = 2, m%nz
          do j = 1, m%ny
             do i = 1, m%nx
@@ -113,8 +109,6 @@ contains
             end do
          end do
       end do
-      !$omp end parallel do
-
     end subroutine wadvect
 
 
