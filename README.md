@@ -26,3 +26,14 @@ run as $ ./nfd ../path/to/config.json
 Two sample JSON config files are included, see the fortran source for explanation. highres.json will go unstable at approximately ~4700 steps.
 
 Output is RAW binary, which can be loaded directly into ParaView or other visualization packages.
+
+##Blue Waters status for serial:
+- PrgEnv-gnu
+  + produces expected output
+- PrgEnv-intel
+  + produces expected output
+- PrgEnv-pgi 
+  + debug build produces expected ouput.
+  + release build, nothing happens, every timestep is the same as the initial condition
+- PrgEnv-cray
+  + CMake doesn't recognize ftn, if I try to set it by hand ccmake hangs.
