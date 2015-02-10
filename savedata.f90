@@ -35,7 +35,7 @@ contains
         outfile = name//"."//trim(adjustl(int2str))//".raw"
  
         print*,'Writing unformatted scalar file: '//outfile
-        open(unit=iounit,access='stream',file=outfile,status='replace')
+        open(unit=iounit,form='BINARY',file=outfile,status='replace')
         write(iounit) field   
         close(iounit) 
 
@@ -56,7 +56,7 @@ contains
         outfile = name//"."//trim(adjustl(int2str))//".vec.raw"
 
         print*,'Writing unformated, interleaved 3-component file: '//outfile       
-        open(unit=iounit,access='stream',file=outfile,status='replace')
+        open(unit=iounit,form='BINARY',file=outfile,status='replace')
 
         do k = 1, m%nz
             do j = 1, m%ny
