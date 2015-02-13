@@ -35,4 +35,7 @@ Output is RAW binary, which can be loaded directly into ParaView or other visual
 - PrgEnv-pgi 
   + produces expected ouput, but must add -Mnopre, in particular for advection.f90.
 - PrgEnv-cray
-  + CMake doesn't recognize ftn, if I try to set it by hand ccmake hangs.
+  + produces expected output, but must use Makefile-cray instead of CMake for time being
+
+## Timings
+https://docs.google.com/spreadsheets/d/1e2N0prgzqzjtAuzFxk4Ui5Zxp7Yx1EaBiR8f9oWMEzs/edit?usp=sharing
