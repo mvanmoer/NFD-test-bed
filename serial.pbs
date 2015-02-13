@@ -10,6 +10,7 @@
 
 cd $PBS_O_WORKDIR
 
-module swap PrgEnv-cray PrgEnv-pgi
+# This needs to be altered for the PrgEnv that was used for compiling
+module load PrgEnv-cray 
 
 time aprun -n 1 ./nfd ${HOME}/NFD/NFD-test-bed/lowres.json
