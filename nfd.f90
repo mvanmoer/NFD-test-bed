@@ -118,7 +118,7 @@ program nfd
           u3, v3, w3, m, dt, CTdt)
 
      ! t1a is unadvected t1, t2 is advected t1
-     call diff(t1a, u3, v3, w3, u1, v1, w1, &
+     call diff(t1, u3, v3, w3, u1, v1, w1, &
           m, CTdt, fsonFile) 
 
      ! call PGF
