@@ -62,7 +62,6 @@ contains
             end do
          end do
       end do
-      !$omp end parallel do
     end subroutine uadvect
 
     subroutine vadvect()
