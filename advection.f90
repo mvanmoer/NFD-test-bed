@@ -19,9 +19,9 @@ contains
     real, intent(in) :: dx, dt
     real :: dtOverdx
     integer :: i
-    integer :: len
+    integer :: length
    
-    len = size(s1) - 4 ! num ghost cells on s1/s2
+    length = size(s1) - 4 ! num ghost cells on s1/s2
     dtOverdx = dt / dx
   
     call piecewise_linear()
@@ -32,7 +32,7 @@ contains
       real :: r1, r2, dsi, dsminus1, dsplus1, F1, F2, a, b, c, d
 
       !$omp parallel do private(i)
-      do i = 1, len
+      do i = 1, length
          r1 = abs(dtOverdx * vel(i))
          r2 = abs(dtOverdx * vel(i + 1))
          dsi = (s1(i + 1) - s1(i - 1)) * 0.5
@@ -57,7 +57,7 @@ contains
       !$omp end parallel do
 
       ! extremely important to NOT copy ghost points!!!!
-      s1(1:len) = s2(1:len)
+      s1(1:length) = s2(1:length)
     end subroutine piecewise_linear
      
   end subroutine advect1D
