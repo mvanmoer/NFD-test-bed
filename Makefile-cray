@@ -1,0 +1,45 @@
+# temporary test to try and isolate which particlar file is getting hammered
+# by partial redundancy elimination
+
+PRG = nfd
+FC = ftn
+
+FSON_build_DIR = /u/staff/mvanmoer/NFD/fson/cray/fson/build/
+FSON_dist_DIR = /u/staff/mvanmoer/NFD/fson/cray/fson/dist/
+
+FCFLAGS = -I$(FSON_build_DIR) -L$(FSON_dist_DIR) -lfson -O3 -o $@
+
+
+OBJECTS = advection.o mesh.o initial_conditions.o integration.o \
+	boundary_conditions.o savedata.o diffusion.o \
+	pgf_bouyancy.o nfd.o 
+
+all: $(PRG)
+
+%.o: %.f90
+	$(FC) -c $(FCFLAGS) $<
+
+%.o: %.F90
+	$(FC) -c $(FCFLAGS) $<
+
+integration.o: integration.f90 ADVECTION.mod
+	$(FC) -c $(FCFLAGS) $<
+
+initial_conditions.o: initial_conditions.f90 MESH_TYPE.mod
+	$(FC) -c $(FCFLAGS) $<
+
+nfd.o: nfd.f90 INTEGRATION.mod DIFFUSION.mod \
+	INITIAL_CONDITIONS.mod BOUNDARY_CONDITIONS.mod \
+	PGF_BOUYANCY.mod
+	$(FC) -c $(FCFLAGS) $<
+
+nfd: $(OBJECTS)
+	$(FC) $(FCFLAGS) -h dynamic $^
+
+clean:
+	rm -f $(OBJECTS) nfd
+
+deepclean:
+	rm -f *.o nfd *~ *.exe *.stackdump *.mod
+
+.PHONY: all clean deepclean
