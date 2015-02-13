@@ -1,0 +1,60 @@
+# temporary test to try and isolate which particlar file is getting hammered
+# by partial redundancy elimination
+
+PRG = nfd
+FC = pgf90
+
+FSON_build_DIR = /u/staff/mvanmoer/NFD/fson/pgi/build/
+FSON_dist_DIR = /u/staff/mvanmoer/NFD/fson/pgi/dist/
+
+FCFLAGS = -I$(FSON_build_DIR) -L$(FSON_dist_DIR) -fast -O3 -Mipa=fast -o $@
+
+
+OBJECTS = advection.o mesh.o initial_conditions.o integration.o \
+	boundary_conditions.o savedata.o diffusion.o \
+	pgf_bouyancy.o nfd.o 
+
+all: $(PRG)
+
+#%.o: %.f90
+#	$(FC) -c $(FCFLAGS) $<
+
+mesh.o: mesh.f90
+	$(FC) -c $(FCFLAGS) $<
+
+advection.o: advection.f90
+	$(FC) -Minfo=all -Mnopre -c $(FCFLAGS) $<
+
+boundary_conditions.o: boundary_conditions.f90
+	$(FC) -c $(FCFLAGS) $<
+
+diffusion.o: diffusion.f90
+	$(FC) -c $(FCFLAGS) $<
+
+pgf_bouyancy.o: pgf_bouyancy.f90
+	$(FC) -c $(FCFLAGS) $<
+
+savedata.o: savedata.F90
+	$(FC) -c $(FCFLAGS) $<
+
+integration.o: integration.f90 advection.mod
+	$(FC) -c $(FCFLAGS) $<
+
+initial_conditions.o: initial_conditions.f90 mesh_type.mod
+	$(FC) -c $(FCFLAGS) $<
+
+nfd.o: nfd.f90 integration.mod diffusion.mod \
+	initial_conditions.mod boundary_conditions.mod \
+	pgf_bouyancy.mod
+	$(FC) -c $(FCFLAGS) $<
+
+nfd: $(OBJECTS)
+	$(FC) $(FCFLAGS) $^ -lfson
+
+clean:
+	rm -f $(OBJECTS) nfd
+
+deepclean:
+	rm -f *.o nfd *~ *.exe *.stackdump *.mod
+
+.PHONY: all clean deepclean
