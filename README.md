@@ -33,7 +33,6 @@ Output is RAW binary, which can be loaded directly into ParaView or other visual
 - PrgEnv-intel
   + produces expected output
 - PrgEnv-pgi 
-  + debug build produces expected ouput.
-  + release build, nothing happens, every timestep is the same as the initial condition
+  + produces expected ouput, but must add -Mnopre, in particular for advection.f90.
 - PrgEnv-cray
   + CMake doesn't recognize ftn, if I try to set it by hand ccmake hangs.
