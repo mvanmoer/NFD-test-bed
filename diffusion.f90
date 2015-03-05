@@ -16,7 +16,12 @@ contains
     real :: K_t
     real :: K_m
 
-    real :: del_xx = 0.0, del_yy = 0.0, del_zz = 0.0, tBar = 300.0
+    real :: tBar = 300.0 
+    ! Redundant to cut out loop dependencies
+    real :: del_xx = 0.0, del_yy = 0.0, del_zz = 0.0
+    real :: del_xxu = 0.0, del_yyu = 0.0, del_zzu = 0.0
+    real :: del_xxv = 0.0, del_yyv = 0.0, del_zzv = 0.0
+    real :: del_xxw = 0.0, del_yyw = 0.0, del_zzw = 0.0
     integer :: i, j, k
     type(fson_value), pointer :: config
   
@@ -39,48 +44,38 @@ contains
           end do
        end do
     end do
-    del_xx = 0.0
-    del_yy = 0.0
-    del_zz = 0.0
 
     ! U
     do k = 1, m%nz
        do j = 1, m%ny
           do i = 2, m%nx
-             del_xx = (u1(i+1,j,k) - 2.0 * u1(i,j,k) + u1(i-1,j,k)) / m%dx**2
-             del_yy = (u1(i,j+1,k) - 2.0 * u1(i,j,k) + u1(i,j-1,k)) / m%dy**2
-             del_zz = (u1(i,j,k+1) - 2.0 * u1(i,j,k) + u1(i,j,k-1)) / m%dz**2
+             del_xxu = (u1(i+1,j,k) - 2.0 * u1(i,j,k) + u1(i-1,j,k)) / m%dx**2
+             del_yyu = (u1(i,j+1,k) - 2.0 * u1(i,j,k) + u1(i,j-1,k)) / m%dy**2
+             del_zzu = (u1(i,j,k+1) - 2.0 * u1(i,j,k) + u1(i,j,k-1)) / m%dz**2
              u3(i,j,k) = u3(i,j,k) + CTdt * K_m * (del_xx + del_yy + del_zz)
           end do
        end do
     end do
-    del_xx = 0.0
-    del_yy = 0.0
-    del_zz = 0.0
 
     ! V
     do k = 1, m%nz
        do j = 1, m%ny
           do i = 1, m%nx
-             del_xx = (v1(i+1,j,k) - 2.0 * v1(i,j,k) + v1(i-1,j,k)) / m%dx**2
-             del_yy = (v1(i,j+1,k) - 2.0 * v1(i,j,k) + v1(i,j-1,k)) / m%dy**2
-             del_zz = (v1(i,j,k+1) - 2.0 * v1(i,j,k) + v1(i,j,k-1)) / m%dz**2
+             del_xxv = (v1(i+1,j,k) - 2.0 * v1(i,j,k) + v1(i-1,j,k)) / m%dx**2
+             del_yyv = (v1(i,j+1,k) - 2.0 * v1(i,j,k) + v1(i,j-1,k)) / m%dy**2
+             del_zzv = (v1(i,j,k+1) - 2.0 * v1(i,j,k) + v1(i,j,k-1)) / m%dz**2
              v3(i,j,k) = v3(i,j,k) + CTdt * K_m * (del_xx + del_yy + del_zz)
           end do
        end do
     end do
-    del_xx = 0.0
-    del_yy = 0.0
-    del_zz = 0.0
-
 
     ! W
     do k = 2, m%nz
        do j = 1, m%ny
           do i = 1, m%nx
-             del_xx = (w1(i+1,j,k) - 2.0 * w1(i,j,k) + w1(i-1,j,k)) / m%dx**2
-             del_yy = (w1(i,j+1,k) - 2.0 * w1(i,j,k) + w1(i,j-1,k)) / m%dy**2
-             del_zz = (w1(i,j,k+1) - 2.0 * w1(i,j,k) + w1(i,j,k-1)) / m%dz**2
+             del_xxw = (w1(i+1,j,k) - 2.0 * w1(i,j,k) + w1(i-1,j,k)) / m%dx**2
+             del_yyw = (w1(i,j+1,k) - 2.0 * w1(i,j,k) + w1(i,j-1,k)) / m%dy**2
+             del_zzw = (w1(i,j,k+1) - 2.0 * w1(i,j,k) + w1(i,j,k-1)) / m%dz**2
              w3(i,j,k) = w3(i,j,k) + CTdt * K_m * (del_xx + del_yy + del_zz)
           end do
        end do
