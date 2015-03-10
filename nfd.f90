@@ -19,7 +19,7 @@ program nfd
   real :: dt
 
   real :: CTdt ! dt for centered time
- 
+   
   real, dimension(:,:,:), allocatable :: u1, u2, u3, v1, v2, v3, w1, w2, w3
   real, dimension(:,:,:), allocatable :: t1, t2, tprime, t1a
   real, dimension(:,:,:), allocatable :: p1, p2, p3
@@ -35,7 +35,11 @@ program nfd
   integer :: i, j, k
   character(len=80) :: fsonFile
   type(fson_value), pointer :: config
-  
+
+  integer :: ierr
+
+  call MPI_INIT(ierr)  
+
   call get_command_argument(1, fsonFile)
 
   config => fson_parse(fsonFile)
@@ -164,6 +168,8 @@ program nfd
 
   end do ! time loop finished     
   deallocate(u1, u2, u3, v1, v2, v3, w1, w2, w3, t1, t2, tprime, t1a, p1, p2, p3, rho_t, rho_w)
+
+  call MPI_FINALIZE(ierr)
 
 contains
   ! unstaggers u,v,w and plots along with theta prime and p
