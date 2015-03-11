@@ -31,6 +31,7 @@ contains
     subroutine piecewise_linear()
       real :: r1, r2, dsi, dsminus1, dsplus1, F1, F2, a, b, c, d
 
+      !$acc kernels
       do i = 1, length
          r1 = abs(dtOverdx * vel(i))
          r2 = abs(dtOverdx * vel(i + 1))
@@ -56,6 +57,7 @@ contains
 
       ! extremely important to NOT copy ghost points!!!!
       s1(1:length) = s2(1:length)
+      !$acc end kernels
     end subroutine piecewise_linear
      
   end subroutine advect1D
