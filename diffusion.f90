@@ -29,10 +29,12 @@ contains
     call fson_get(config, "K_t", K_t)
     call fson_get(config, "K_m", K_m)
     call fson_destroy(config)
- 
+
+!$acc data copy(t, u1, u3, v1, v3, w1, w3), create(tprime)
     tprime = t - tBar
 
     ! Theta
+!$acc parallel loop num_gangs(50) vector_length(64)
     do k = 1, m%nz
        do j = 1, m%ny
           do i = 1, m%nx
@@ -44,8 +46,10 @@ contains
           end do
        end do
     end do
+!$acc end parallel loop
 
     ! U
+!$acc parallel loop num_gangs(50) vector_length(64)
     do k = 1, m%nz
        do j = 1, m%ny
           do i = 2, m%nx
@@ -56,8 +60,10 @@ contains
           end do
        end do
     end do
+!$acc end parallel loop
 
     ! V
+!$acc parallel loop num_gangs(50) vector_length(64)
     do k = 1, m%nz
        do j = 1, m%ny
           do i = 1, m%nx
@@ -68,8 +74,10 @@ contains
           end do
        end do
     end do
+!$acc end parallel loop
 
     ! W
+!$acc parallel loop num_gangs(50) vector_length(64)
     do k = 2, m%nz
        do j = 1, m%ny
           do i = 1, m%nx
@@ -80,5 +88,7 @@ contains
           end do
        end do
     end do
+!$acc end parallel loop
+!$acc end data
    end subroutine diff
 end module diffusion
